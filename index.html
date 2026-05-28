@@ -56,7 +56,7 @@
                 
                 <div class="mt-8 border-t border-blue-500/30 pt-4 flex justify-between items-end">
                     <div>
-                        <p class="text-xs text-blue-200 uppercase tracking-wider">Skor Rata-Rata</p>
+                        <p class="text-xs text-blue-200 uppercase tracking-wider">Total Skor</p>
                         <p id="dsSkor" class="text-5xl font-black mt-1 text-amber-300">-</p>
                     </div>
                     <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all">Cetak PDF / Print</button>
@@ -124,7 +124,7 @@
                     // Hitung rata-rata matematika & bahasa secara realtime untuk skor total
                     const nMat = parseFloat(siswa.matematika) || 0;
                     const nInd = parseFloat(siswa.bahasa) || 0;
-                    siswa.rataRata = (nMat > 0 || nInd > 0) ? Math.round((nMat + nInd) / 2) : "-";
+                    siswa.rataRata = (nMat > 0 || nInd > 0) ? Math.round((nMat + nInd)) : "-";
 
                     return siswa;
                 });
