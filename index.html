@@ -14,7 +14,7 @@
                 <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-sm">P3</div>
                 <div>
                     <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">SMPK 3 PENABUR</h1>
-                    <p class="text-xs text-slate-500">Portal Nilai Mandiri TKA (Live Database)</p>
+                    <p class="text-xs text-slate-500">Portal Nilai Mandiri TKA (Live Sheets)</p>
                 </div>
             </div>
             <div id="navAction" class="hidden">
@@ -89,14 +89,13 @@
         // CONFIGURATION: MASUKKAN ID GOOGLE SHEETS ANDA
         // ==========================================
         const SPREADSHEET_ID = "1SFFdBfrvxmAoJgzw6NirL5jI17OXeJFNHG8Jnq9m2HM";
-        const SHEET_NAME = "Sheet1"; // Sesuaikan nama lembar jika diganti
+        const SHEET_NAME = "Sheet1"; 
         
-        // URL untuk mengambil data berformat JSON (Gratis tanpa API KEY gapi)
         const FETCH_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
         let dbSiswa = [];
 
-        // Fungsi Otomatis Mengambil Data Terbaru dari Google Sheets saat Web Dibuka
+        // Fungsi Otomatis Mengambil Data Terbaru dari Google Sheets
         async function muatDataDariGoogleSheets() {
             const loadingBox = document.getElementById('statusLoading');
             loadingBox.classList.remove('hidden');
@@ -105,35 +104,42 @@
                 const response = await fetch(FETCH_URL);
                 const text = await response.text();
                 
-                // Google Sheets mengembalikan bungkus string google.visualization.Query.setResponse(...)
-                // Kita potong teks luar tersebut untuk mengambil objek JSON murni di dalamnya
+                // Potong teks pembungkus bawaan Google API
                 const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]*)\);/)[1];
                 const data = JSON.parse(jsonText);
                 
                 const rows = data.table.rows;
-                const cols = data.table.cols.map(c => c.label.toLowerCase().trim());
+                // Ubah label kolom menjadi huruf kecil semua dan hapus spasi untuk menghindari salah ketik
+                const cols = data.table.cols.map(c => c.label ? c.label.toLowerCase().replace(/[\s._]/g, '') : '');
 
-                // Transformasi struktur data Google Sheets menjadi Objek JavaScript siap pakai
                 dbSiswa = rows.map(row => {
                     let siswa = {};
                     row.c.forEach((cell, index) => {
                         let columnName = cols[index] || `kolom_${index}`;
+                        
+                        // Pemetaan Pintar: mencocokkan teks variasi kolom ke variabel sistem
+                        if (columnName.includes("nisn")) columnName = "nisn";
+                        if (columnName.includes("nama")) columnName = "nama";
+                        if (columnName.includes("kelas")) columnName = "kelas";
+                        if (columnName.includes("matematika") || columnName === "mat") columnName = "matematika";
+                        if (columnName.includes("bahasa") || columnName.includes("indonesia") || columnName === "bi") columnName = "bahasa";
+
                         siswa[columnName] = cell ? String(cell.v).trim() : "-";
                     });
 
-                    // Hitung rata-rata skor secara otomatis untuk kebutuhan tampilan visual siswa
+                    // Hitung rata-rata skor total otomatis secara aman
                     const numMat = parseFloat(siswa.matematika) || 0;
                     const numBih = parseFloat(siswa.bahasa) || 0;
-                    siswa.skor = Math.round((numMat + numBih) / 2) || "-";
+                    siswa.skor = (numMat > 0 || numBih > 0) ? Math.round((numMat + numBih) / 2) : "-";
 
                     return siswa;
                 });
 
-                console.log("Database Online Berhasil Disinkronkan!", dbSiswa);
+                console.log("Database Berhasil Disinkronkan!", dbSiswa);
                 loadingBox.classList.add('hidden');
             } catch (error) {
                 console.error("Gagal memuat database online:", error);
-                loadingBox.innerText = "⚠️ Gagal tersambung ke server Google Sheets. Cek status publikasi file Anda.";
+                loadingBox.innerText = "⚠️ Sinkronisasi Gagal. Periksa pengaturan 'Bagikan ke semua orang' di Google Sheets.";
                 loadingBox.classList.remove('bg-blue-50', 'text-blue-600');
                 loadingBox.classList.add('bg-red-50', 'text-red-600');
             }
@@ -144,7 +150,12 @@
             e.preventDefault();
             const inputNisn = document.getElementById('loginNisn').value.trim();
             
-            // Cari data cocok berdasarkan kolom NISN di Google Sheets
+            if (dbSiswa.length === 0) {
+                alert("Data belum siap atau koneksi lambat. Mohon tunggu 3 detik lalu coba lagi.");
+                return;
+            }
+
+            // Cari kecocokan data NISN secara presisi
             const siswa = dbSiswa.find(s => s.nisn === inputNisn);
 
             if (siswa) {
@@ -154,12 +165,12 @@
                 document.getElementById('dsMatematika').innerText = siswa.matematika || "-";
                 document.getElementById('dsBahasa').innerText = siswa.bahasa || "-";
 
-                // Pindah halaman ke dashboard nilai siswa
+                // Pindah halaman
                 document.getElementById('pageLogin').classList.add('hidden');
                 document.getElementById('pageDashboard').classList.remove('hidden');
                 document.getElementById('navAction').classList.remove('hidden');
             } else {
-                alert("NISN tidak ditemukan! Jika Anda siswa baru, pastikan data Anda sudah dimasukkan oleh Guru di Google Sheets resmi sekolah.");
+                alert("NISN '" + inputNisn + "' tidak ditemukan!\n\nPeriksa kembali nomor Anda atau hubungi Admin sekolah jika Anda baru saja terdaftar.");
             }
         }
 
@@ -169,11 +180,10 @@
             document.getElementById('navAction').classList.add('hidden');
             document.getElementById('pageDashboard').classList.add('hidden');
             document.getElementById('pageLogin').classList.remove('hidden');
-            // Muat ulang data cadangan barangkali ada input baru di Google Sheets saat siswa sedang login
             muatDataDariGoogleSheets();
         }
 
-        // Jalankan sinkronisasi database sesaat setelah halaman web termuat sempurna
+        // Jalankan sinkronisasi database saat web pertama kali terbuka
         window.onload = muatDataDariGoogleSheets;
     </script>
 </body>
