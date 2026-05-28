@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Nilai TKA - SMPK 3 PENABUR</title>
+    <title>Portal Nilai TKA Mandiri</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen flex flex-col justify-between">
@@ -11,10 +11,10 @@
     <nav class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-50 shadow-sm">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-sm">P3</div>
+                <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-sm">TKA</div>
                 <div>
                     <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">SMPK 3 PENABUR</h1>
-                    <p class="text-xs text-slate-500">Portal Nilai Mandiri TKA (Live Sheets)</p>
+                    <p class="text-xs text-slate-500">Portal Nilai Mandiri (Real-time Database)</p>
                 </div>
             </div>
             <div id="navAction" class="hidden">
@@ -25,18 +25,18 @@
 
     <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col justify-center items-center">
         
-        <div id="statusLoading" class="text-center py-4 text-xs font-semibold text-blue-600 bg-blue-50 w-full max-w-md rounded-xl mb-4 hidden animate-pulse">
-            🔄 Sedang menyinkronkan data dengan Google Sheets...
+        <div id="statusLoading" class="text-center py-2.5 px-4 text-xs font-semibold text-blue-600 bg-blue-50 w-full max-w-md rounded-xl mb-4 hidden animate-pulse">
+            🔄 Sedang menyinkronkan nilai terbaru dengan Google Sheets...
         </div>
 
         <div id="pageLogin" class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-slate-100 border border-slate-100">
-            <h2 class="text-2xl font-bold text-slate-800 text-center mb-1">Masuk Portal</h2>
-            <p class="text-xs text-slate-400 text-center mb-6">Silakan login menggunakan NISN Anda.</p>
+            <h2 class="text-2xl font-bold text-slate-800 text-center mb-1">Cek Nilai Mandiri</h2>
+            <p class="text-xs text-slate-400 text-center mb-6">Silakan masukkan nomor NISN Anda untuk melihat hasil.</p>
             
             <form onsubmit="handleLogin(event)" class="space-y-4 text-sm">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Nomor NISN Siswa</label>
-                    <input type="text" id="loginNisn" required placeholder="Masukkan NISN Anda" 
+                    <input type="text" id="loginNisn" required placeholder="Contoh: 0098231145" 
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 transition-all">
                 </div>
                 <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-100 transition-all">
@@ -44,35 +44,35 @@
                 </button>
             </form>
             <div class="text-center mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400">
-                Data terhubung langsung secara online dengan Google Sheets Sekolah.
+                Sistem terhubung langsung secara aman ke Cloud Google Sekolah.
             </div>
         </div>
 
         <div id="pageDashboard" class="w-full max-w-2xl hidden space-y-6">
             <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white p-6 rounded-2xl shadow-xl relative overflow-hidden">
-                <span class="text-xs bg-blue-500/50 px-2.5 py-1 rounded-full font-medium">Hasil Ujian Mandiri</span>
+                <span class="text-xs bg-blue-500/50 px-2.5 py-1 rounded-full font-medium">Lembar Hasil Nilai TKA</span>
                 <h3 id="dsNama" class="text-2xl font-bold mt-3">-</h3>
                 <p id="dsKelas" class="text-sm text-blue-100 mt-1">-</p>
                 
                 <div class="mt-8 border-t border-blue-500/30 pt-4 flex justify-between items-end">
                     <div>
-                        <p class="text-xs text-blue-200 uppercase tracking-wider">Skor Rata-Rata TKA</p>
+                        <p class="text-xs text-blue-200 uppercase tracking-wider">Skor Rata-Rata</p>
                         <p id="dsSkor" class="text-5xl font-black mt-1 text-amber-300">-</p>
                     </div>
-                    <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all">Cetak PDF</button>
+                    <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all">Cetak PDF / Print</button>
                 </div>
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 space-y-4">
-                <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Rincian Nilai Mata Pelajaran</h4>
+                <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Rincian Kompetensi Akademik</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="p-4 bg-slate-50 rounded-xl text-center">
+                    <div class="p-4 bg-slate-50 rounded-xl text-center border border-slate-100">
                         <p class="text-xs text-slate-400 font-medium mb-1 uppercase tracking-wider">Matematika</p>
-                        <p id="dsMatematika" class="text-2xl font-bold text-slate-800">-</p>
+                        <p id="dsMatematika" class="text-3xl font-bold text-slate-800">-</p>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl text-center">
+                    <div class="p-4 bg-slate-50 rounded-xl text-center border border-slate-100">
                         <p class="text-xs text-slate-400 font-medium mb-1 uppercase tracking-wider">Bahasa Indonesia</p>
-                        <p id="dsBahasa" class="text-2xl font-bold text-slate-800">-</p>
+                        <p id="dsBahasa" class="text-3xl font-bold text-slate-800">-</p>
                     </div>
                 </div>
             </div>
@@ -81,110 +81,106 @@
     </main>
 
     <footer class="text-center py-4 text-xs text-slate-400">
-        &copy; 2026 SMPK 3 PENABUR. All rights reserved.
+        &copy; 2026 Portal Nilai Mandiri Sekolah. All rights reserved.
     </footer>
 
     <script>
-        // ==========================================
-        // CONFIGURATION: MASUKKAN ID GOOGLE SHEETS ANDA
-        // ==========================================
-        const SPREADSHEET_ID = "1SFFdBfrvxmAoJgzw6NirL5jI17OXeJFNHG8Jnq9m2HM";
-        const SHEET_NAME = "Sheet1"; 
+        // ========================================================
+        // KONFIGURASI LINK DATABASE
+        // ========================================================
+        const SPREADSHEET_ID = "1SFFdBfrvxmAoJgzw6NirL5jI17OXeJFNHG8Jnq9m2HM"; 
+        const SHEET_NAME = "Sheet1"; // Nama tab sheet (bawaannya Sheet1)
         
-        const FETCH_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+        // Memanfaatkan Google Visualization API untuk membaca data ter-publish (Tanpa perlu API Key ribet)
+        const URL_API = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
-        let dbSiswa = [];
+        let databaseSiswa = [];
 
-        // Fungsi Otomatis Mengambil Data Terbaru dari Google Sheets
-        async function muatDataDariGoogleSheets() {
-            const loadingBox = document.getElementById('statusLoading');
-            loadingBox.classList.remove('hidden');
+        // Fungsi realtime mengintip isi Google Sheets
+        async function sinkronisasiDataSheets() {
+            const loadingIndikator = document.getElementById('statusLoading');
+            loadingIndikator.classList.remove('hidden');
 
             try {
-                const response = await fetch(FETCH_URL);
-                const text = await response.text();
+                const response = await fetch(URL_API);
+                const stringMentah = await response.text();
                 
-                // Potong teks pembungkus bawaan Google API
-                const jsonText = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]*)\);/)[1];
-                const data = JSON.parse(jsonText);
+                // Parsing string khusus dari Google Sheets API menjadi JSON murni
+                const jsonBersih = stringMentah.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]*)\);/)[1];
+                const dataObjek = JSON.parse(jsonBersih);
                 
-                const rows = data.table.rows;
-                // Ubah label kolom menjadi huruf kecil semua dan hapus spasi untuk menghindari salah ketik
-                const cols = data.table.cols.map(c => c.label ? c.label.toLowerCase().replace(/[\s._]/g, '') : '');
+                const barisData = dataObjek.table.rows;
+                // Mengambil nama kolom dan membersihkannya dari spasi/kapital
+                const namaKolom = dataObjek.table.cols.map(c => c.label ? c.label.toLowerCase().trim() : '');
 
-                dbSiswa = rows.map(row => {
+                // Memetakan data tabel Sheets ke dalam array memori lokal web siswa
+                databaseSiswa = barisData.map(row => {
                     let siswa = {};
                     row.c.forEach((cell, index) => {
-                        let columnName = cols[index] || `kolom_${index}`;
-                        
-                        // Pemetaan Pintar: mencocokkan teks variasi kolom ke variabel sistem
-                        if (columnName.includes("nisn")) columnName = "nisn";
-                        if (columnName.includes("nama")) columnName = "nama";
-                        if (columnName.includes("kelas")) columnName = "kelas";
-                        if (columnName.includes("matematika") || columnName === "mat") columnName = "matematika";
-                        if (columnName.includes("bahasa") || columnName.includes("indonesia") || columnName === "bi") columnName = "bahasa";
-
-                        siswa[columnName] = cell ? String(cell.v).trim() : "-";
+                        let properti = namaKolom[index] || `kolom_${index}`;
+                        siswa[properti] = cell ? String(cell.v).trim() : "-";
                     });
 
-                    // Hitung rata-rata skor total otomatis secara aman
-                    const numMat = parseFloat(siswa.matematika) || 0;
-                    const numBih = parseFloat(siswa.bahasa) || 0;
-                    siswa.skor = (numMat > 0 || numBih > 0) ? Math.round((numMat + numBih) / 2) : "-";
+                    // Hitung rata-rata matematika & bahasa secara realtime untuk skor total
+                    const nMat = parseFloat(siswa.matematika) || 0;
+                    const nInd = parseFloat(siswa.bahasa) || 0;
+                    siswa.rataRata = (nMat > 0 || nInd > 0) ? Math.round((nMat + nInd) / 2) : "-";
 
                     return siswa;
                 });
 
-                console.log("Database Berhasil Disinkronkan!", dbSiswa);
-                loadingBox.classList.add('hidden');
-            } catch (error) {
-                console.error("Gagal memuat database online:", error);
-                loadingBox.innerText = "⚠️ Sinkronisasi Gagal. Periksa pengaturan 'Bagikan ke semua orang' di Google Sheets.";
-                loadingBox.classList.remove('bg-blue-50', 'text-blue-600');
-                loadingBox.classList.add('bg-red-50', 'text-red-600');
+                console.log("Koneksi Real-time Aktif! Data sinkron:", databaseSiswa);
+                loadingIndikator.classList.add('hidden');
+            } catch (err) {
+                console.error("Gagal sinkronisasi data:", err);
+                loadingIndikator.innerText = "⚠️ Gagal memperbarui data dari Cloud. Menampilkan data sesi sebelumnya.";
+                loadingIndikator.classList.remove('text-blue-600', 'bg-blue-50');
+                loadingIndikator.classList.add('text-red-600', 'bg-red-50');
             }
         }
 
-        // Fungsi Proses Login Siswa Mandiri
+        // Logika verifikasi saat tombol Login diklik oleh siswa
         function handleLogin(e) {
             e.preventDefault();
             const inputNisn = document.getElementById('loginNisn').value.trim();
             
-            if (dbSiswa.length === 0) {
-                alert("Data belum siap atau koneksi lambat. Mohon tunggu 3 detik lalu coba lagi.");
+            if (databaseSiswa.length === 0) {
+                alert("Sedang menghubungkan ke server, mohon tunggu sebentar lalu klik lagi.");
                 return;
             }
 
-            // Cari kecocokan data NISN secara presisi
-            const siswa = dbSiswa.find(s => s.nisn === inputNisn);
+            // Cari NISN yang cocok di memori cloud hasil fetch
+            const cocok = databaseSiswa.find(s => s.nisn === inputNisn);
 
-            if (siswa) {
-                document.getElementById('dsNama').innerText = siswa.nama || "-";
-                document.getElementById('dsKelas').innerText = siswa.kelas ? "Kelas " + siswa.kelas : "-";
-                document.getElementById('dsSkor').innerText = siswa.skor;
-                document.getElementById('dsMatematika').innerText = siswa.matematika || "-";
-                document.getElementById('dsBahasa').innerText = siswa.bahasa || "-";
+            if (cocok) {
+                // Tampilkan data ke dashboard siswa
+                document.getElementById('dsNama').innerText = cocok.nama || "Siswa Tanpa Nama";
+                document.getElementById('dsKelas').innerText = cocok.kelas ? "Kelas " + cocok.kelas : "-";
+                document.getElementById('dsSkor').innerText = cocok.rataRata;
+                document.getElementById('dsMatematika').innerText = cocok.matematika || "-";
+                document.getElementById('dsBahasa').innerText = cocok.bahasa || "-";
 
-                // Pindah halaman
+                // Efek ganti halaman kartu
                 document.getElementById('pageLogin').classList.add('hidden');
                 document.getElementById('pageDashboard').classList.remove('hidden');
                 document.getElementById('navAction').classList.remove('hidden');
             } else {
-                alert("NISN '" + inputNisn + "' tidak ditemukan!\n\nPeriksa kembali nomor Anda atau hubungi Admin sekolah jika Anda baru saja terdaftar.");
+                alert("Nomor NISN tidak ditemukan.\n\nPastikan nomor sudah benar, atau hubungi wali kelas jika Anda belum terdaftar di database sekolah.");
             }
         }
 
-        // Fungsi Keluar / Logout
+        // Fungsi Keluar Halaman Nilai
         function logout() {
             document.getElementById('loginNisn').value = '';
             document.getElementById('navAction').classList.add('hidden');
             document.getElementById('pageDashboard').classList.add('hidden');
             document.getElementById('pageLogin').classList.remove('hidden');
-            muatDataDariGoogleSheets();
+            // Ambil ulang data dari Google Sheet barangkali ada perbaikan nilai dari guru di saat bersamaan
+            sinkronisasiDataSheets();
         }
 
-        // Jalankan sinkronisasi database saat web pertama kali terbuka
-        window.onload = muatDataDariGoogleSheets;
+        // Jalankan pengambilan data secara otomatis saat web pertama kali diakses
+        window.onload = sinkronisasiDataSheets;
     </script>
 </body>
 </html>
