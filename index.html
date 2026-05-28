@@ -124,7 +124,7 @@
                     // Hitung rata-rata matematika & bahasa secara realtime untuk skor total
                     const nMat = parseFloat(siswa.matematika) || 0;
                     const nInd = parseFloat(siswa.bahasa) || 0;
-                    siswa.rataRata = (nMat > 0 || nInd > 0) ? Math.round((nMat + nInd)) : "-";
+                    siswa.rataRata = (nMat > 0 || nInd > 0) ? Math.round((nMat + nInd)).toFixed(2) : "-";
 
                     return siswa;
                 });
